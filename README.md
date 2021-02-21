@@ -11,7 +11,7 @@ Create the namespace for your deployment.
 ## Step 3: 
 Deploy nginx 
    ```bash
-   kubectl apply -f deploy.yaml
+   kubectl apply -f deploy-nginx.yaml
    ```
 
 To see the deployment pods
@@ -58,20 +58,21 @@ And to see the skupper-router and skupper-service-controller
 Skupper-ize the nginx deployment by creating a service and binding to nginx deployment
 
    ```bash
-   skupper service create my-nginx http
+   skupper service create my-nginx 80
    skupper service bind my-nginx deployment nginx-deployment
    ```
 
-You should see that a service was created named my-ginx
+You should see that skupper created a service named my-ginx
 
    ```bash
+   skupper service status
    kubectl get service my-nginx -o yaml
    ```
 Note in the spec for the service, the selector is for the skupper-router and its target port.
 
 ## Step 7: 
 
-Using the curl pod from above, curl the my-ginx service rather than the pod ips (you may need to re-attach)
+Using the curl pod from above, curl the my-nginx service rather than the pod ips (you may need to re-attach)
 
    ```bash
    curl my-nginx
@@ -83,7 +84,7 @@ Note that this request will go via the service to the skupper-router for the res
 If you are on mini-kube and would like to reach the service outside of minikube from your host
 
    ```bash
-   kubectl port-forward service/my-ginx 8080:80
+   kubectl port-forward service/my-nginx 8080:80
    ```
 And from a host terminal, curl the service
 
